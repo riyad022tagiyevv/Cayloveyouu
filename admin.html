@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Müdir Paneli</title>
+</head>
+<body>
+
+<h2>Müdir Girişi</h2>
+
+Kod: <input type="password" id="adminCode">
+<button onclick="adminLogin()">Daxil ol</button>
+
+<hr>
+
+<div id="panel" style="display:none;">
+
+    <h3>Cərimə Yaz</h3>
+    Məbləğ (AZN):<br>
+    <input type="number" id="cerime"><br><br>
+
+    <button onclick="addCerime()">Cərimə Əlavə Et</button>
+
+    <ul id="cerimeList"></ul>
+
+    <hr>
+
+    <h3>Bütün Sifarişlər</h3>
+    <ul id="orderListAdmin"></ul>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
