@@ -2,32 +2,138 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Ofisiant Paneli</title>
+    <title>Restaurant Panel</title>
     <style>
-        body { font-family: Arial; padding: 30px; max-width: 600px; margin:auto; }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; font-size: 18px; }
+        body { font-family: Arial; margin:20px; }
+        h1 { text-align:center; font-size:48px; }
+        .container { display:flex; gap:20px; flex-wrap: wrap; }
+        .panel { flex:1; background:#f2f2f2; padding:20px; border-radius:15px; min-width:300px; }
+        input, button { padding:10px; margin:5px 0; width:100%; font-size:18px; }
+        #ordersBox { background:white; padding:20px; border-radius:15px; height:500px; overflow-y:auto; font-size:24px; }
+        .order { padding:15px; margin-bottom:10px; border-left:5px solid #3498db; background:#ecf6ff; font-weight:bold; }
+        #panel { display:none; margin-top:20px; background:#fff; padding:20px; border-radius:15px; }
     </style>
 </head>
 <body>
-    <h1>Ofisiant Paneli</h1>
+    <h1>Restaurant Panel</h1>
+    <div class="container">
+        <!-- Ofisiant Panel -->
+        <div class="panel">
+            <h2>Ofisiant Paneli</h2>
+            <input type="text" id="masa" placeholder="Masa nömrəsi">
+            <input type="text" id="mehsul" placeholder="Məhsul">
+            <input type="text" id="qeyd" placeholder="Qeyd (istəyə bağlı)">
+            <button onclick="sendOrder()">Sifarişi Göndər</button>
 
-    <input type="text" id="masa" placeholder="Masa nömrəsi">
-    <input type="text" id="mehsul" placeholder="Məhsul">
-    <input type="text" id="qeyd" placeholder="Qeyd (istəyə bağlı)">
-    <button onclick="sendOrder()">Sifarişi Göndər</button>
+            <h3>Admin Panel Girişi</h3>
+            <input type="password" id="adminCode" placeholder="Admin kod">
+            <button onclick="adminLogin()">Daxil ol</button>
 
-    <hr>
-    <h3>Admin Panel Girişi</h3>
-    <input type="password" id="adminCode" placeholder="Admin kod">
-    <button onclick="adminLogin()">Daxil ol</button>
+            <div id="panel">
+                <h3>Admin Panel</h3>
+                <ul id="adminList"></ul>
+            </div>
+        </div>
 
-    <div id="panel" style="display:none; margin-top:20px;">
-        <h2>Admin Panel</h2>
-        <ul id="adminList"></ul>
+        <!-- Mətbəx Paneli -->
+        <div class="panel">
+            <h2>Mətbəx Paneli</h2>
+            <div id="ordersBox">Yüklənir...</div>
+        </div>
     </div>
 
+    <!-- Səs faylı -->
+    <audio id="pingSound" src="ping.mp3"></audio>
+
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Firebase konfiqurasiya
+        var firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
+        var pingSound = document.getElementById('pingSound');
+
+        // Ofisiant → Göndər
+        function sendOrder(){
+            const masa = document.getElementById('masa').value.trim();
+            const mehsul = document.getElementById('mehsul').value.trim();
+            const qeyd = document.getElementById('qeyd').value.trim() || '-';
+            if(!masa || !mehsul){ alert('Masa və məhsul boş ola bilməz!'); return; }
+
+            const id = Date.now();
+            db.ref('orders/' + id).set({
+                masa, mehsul, qeyd,
+                time: new Date().toLocaleTimeString(),
+                status: 'new'
+            });
+            pingSound.play().catch(()=>{});
+            alert('Sifariş göndərildi ✔');
+        }
+
+        // Mətbəx Paneli
+        var lastOrderIds = [];
+        function loadKitchen(){
+            db.ref('orders').on('value', snapshot => {
+                if(!snapshot.exists()){
+                    document.getElementById('ordersBox').innerHTML = 'Sifariş yoxdur';
+                    lastOrderIds = [];
+                    return;
+                }
+                const data = snapshot.val();
+                let html = '';
+                let currentIds = [];
+                Object.keys(data).forEach(id=>{
+                    const o = data[id];
+                    currentIds.push(id);
+                    html += `<div class='order'>
+                        <b>Masa:</b> ${o.masa} <br>
+                        <b>Sifariş:</b> ${o.mehsul} <br>
+                        <b>Qeyd:</b> ${o.qeyd} <br>
+                        <b>Zaman:</b> ${o.time}
+                    </div>`;
+                });
+                // Yeni sifariş səsi
+                currentIds.forEach(id => { if(!lastOrderIds.includes(id)) pingSound.play().catch(()=>{}); });
+                lastOrderIds = currentIds;
+                document.getElementById('ordersBox').innerHTML = html;
+            });
+        }
+
+        // Admin
+        function adminLogin(){
+            if(document.getElementById('adminCode').value === '1986'){
+                document.getElementById('panel').style.display = 'block';
+                loadAdminOrders();
+            } else alert('Kod səhvdir!');
+        }
+        function loadAdminOrders(){
+            db.ref('orders').once('value', snapshot=>{
+                const list = document.getElementById('adminList');
+                list.innerHTML = '';
+                snapshot.forEach(snap=>{
+                    const o = snap.val();
+                    const li = document.createElement('li');
+                    li.innerHTML = `<div><b>Masa ${o.masa}</b><br>${o.mehsul} — ${o.qeyd}<br>${o.time} — ${o.status}</div>`;
+                    const btn = document.createElement('button');
+                    btn.textContent = 'Sil';
+                    btn.onclick = ()=>db.ref('orders/' + snap.key).remove();
+                    li.appendChild(btn);
+                    list.appendChild(li);
+                });
+            });
+        }
+
+        window.onload = loadKitchen;
+    </script>
 </body>
 </html>
