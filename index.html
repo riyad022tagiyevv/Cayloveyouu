@@ -2,28 +2,23 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Sifariş Göndər</title>
+    <title>Ofisiant Paneli</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; border-radius: 6px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
 </head>
-<body>
-    <h2>Sifariş Göndər</h2>
+<body onload="listenAccepted()">
 
-    Masa nömrəsi:<br>
-    <input type="text" id="masa"><br><br>
+<h2>Ofisiant Paneli</h2>
+<input id="masa" placeholder="Masa nömrəsi">
+<input id="mehsul" placeholder="Məhsul adı">
+<input id="qeyd" placeholder="Qeyd">
+<button onclick="sendOrder()">Göndər</button>
 
-    Məhsul adı:<br>
-    <input type="text" id="mehsul"><br><br>
-
-    Qeyd:<br>
-    <input type="text" id="qeyd"><br><br>
-
-    <button onclick="sendOrder()">Sifarişi Göndər</button><br><br>
-
-    <audio id="sound" src="ping.mp3"></audio>
-
-    <br><br>
-    <a href="kitchen.html">Mətbəx</a> |
-    <a href="admin.html">Müdir</a>
-
-    <script src="script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
