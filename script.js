@@ -4,9 +4,9 @@ var firebaseConfig = {
     authDomain: "cay-love-you.firebaseapp.com",
     databaseURL: "https://cay-love-you-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "cay-love-you",
-    storageBucket: "cay-love-you.firebasestorage.app",
+    storageBucket: "cay-love-you.firebasedatabase.app",
     messagingSenderId: "526657108236",
-    appId: 1:526657108236:web:8ce574d880d232c754b129"
+    appId: "1:526657108236:web:8ce574d880d232c754b129"
 };
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
@@ -14,7 +14,9 @@ var db = firebase.database();
 // Səs faylı
 var pingSound = new Audio('ping.mp3');
 
+// ============================
 // Ofisiant → Göndər
+// ============================
 function sendOrder() {
     const masa = document.getElementById('masa').value.trim();
     const mehsul = document.getElementById('mehsul').value.trim();
@@ -34,7 +36,9 @@ function sendOrder() {
     alert('Sifariş göndərildi ✔');
 }
 
+// ============================
 // Mətbəx → Yeni sifarişləri dinlə
+// ============================
 var lastOrderIds = [];
 function loadKitchen() {
     db.ref('orders').on('value', snapshot => {
@@ -68,6 +72,7 @@ function loadKitchen() {
 }
 
 function listenNewOrders(){ loadKitchen(); }
+
 function listenAccepted(){
     setInterval(()=>{
         db.ref('orders').once('value', snapshot=>{
@@ -82,7 +87,9 @@ function listenAccepted(){
     }, 1000);
 }
 
+// ============================
 // Admin
+// ============================
 function adminLogin(){
     if(document.getElementById('adminCode').value === '1986'){
         document.getElementById('panel').style.display = 'block';
