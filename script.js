@@ -1,12 +1,12 @@
 // Firebase Konfiqurasiya
 var firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "000000000",
-    appId: "1:000000000:web:000000000"
+    apiKey: "AIzaSyCwnn6JY3f-Nv9NWx2beIUjAnyVCqU749E",
+    authDomain: "cay-love-you.firebaseapp.com",
+    databaseURL: "https://cay-love-you-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "cay-love-you",
+    storageBucket: "cay-love-you.firebasestorage.app",
+    messagingSenderId: "526657108236",
+    appId: 1:526657108236:web:8ce574d880d232c754b129"
 };
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
