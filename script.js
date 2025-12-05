@@ -43,7 +43,8 @@ var lastOrderIds = [];
 function loadKitchen() {
     db.ref('orders').on('value', snapshot => {
         if(!snapshot.exists()) {
-            document.getElementById('ordersBox').innerHTML = 'Sifariş yoxdur';
+            if(document.getElementById('ordersBox')) 
+                document.getElementById('ordersBox').innerHTML = 'Sifariş yoxdur';
             lastOrderIds = [];
             return;
         }
@@ -67,24 +68,9 @@ function loadKitchen() {
         currentIds.forEach(id => { if(!lastOrderIds.includes(id)) pingSound.play().catch(()=>{}); });
         lastOrderIds = currentIds;
 
-        document.getElementById('ordersBox').innerHTML = html;
+        if(document.getElementById('ordersBox'))
+            document.getElementById('ordersBox').innerHTML = html;
     });
-}
-
-function listenNewOrders(){ loadKitchen(); }
-
-function listenAccepted(){
-    setInterval(()=>{
-        db.ref('orders').once('value', snapshot=>{
-            snapshot.forEach(snap=>{
-                let o = snap.val();
-                if(o.status === 'accepted'){
-                    pingSound.play().catch(()=>{});
-                    db.ref('orders/' + snap.key + '/status').set('notified');
-                }
-            });
-        });
-    }, 1000);
 }
 
 // ============================
@@ -100,6 +86,7 @@ function adminLogin(){
 function loadAdminOrders(){
     db.ref('orders').once('value', snapshot=>{
         const list = document.getElementById('adminList');
+        if(!list) return;
         list.innerHTML = '';
         snapshot.forEach(snap=>{
             const o = snap.val();
@@ -113,3 +100,10 @@ function loadAdminOrders(){
         });
     });
 }
+
+// ============================
+// Auto-load mətbəx paneli varsa
+// ============================
+window.onload = function(){
+    if(document.getElementById('ordersBox')) loadKitchen();
+};
