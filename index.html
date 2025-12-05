@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <title>Ofisiant Paneli</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; border-radius: 6px; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        body { font-family: Arial; padding: 30px; max-width: 600px; margin:auto; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; font-size: 18px; }
     </style>
 </head>
-<body onload="listenAccepted()">
+<body>
+    <h1>Ofisiant Paneli</h1>
 
-<h2>Ofisiant Paneli</h2>
-<input id="masa" placeholder="Masa nömrəsi">
-<input id="mehsul" placeholder="Məhsul adı">
-<input id="qeyd" placeholder="Qeyd">
-<button onclick="sendOrder()">Göndər</button>
+    <input type="text" id="masa" placeholder="Masa nömrəsi">
+    <input type="text" id="mehsul" placeholder="Məhsul">
+    <input type="text" id="qeyd" placeholder="Qeyd (istəyə bağlı)">
+    <button onclick="sendOrder()">Sifarişi Göndər</button>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="script.js"></script>
+    <hr>
+    <h3>Admin Panel Girişi</h3>
+    <input type="password" id="adminCode" placeholder="Admin kod">
+    <button onclick="adminLogin()">Daxil ol</button>
+
+    <div id="panel" style="display:none; margin-top:20px;">
+        <h2>Admin Panel</h2>
+        <ul id="adminList"></ul>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
