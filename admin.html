@@ -1,34 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Müdir Paneli</title>
+<meta charset="UTF-8">
+<title>Admin Paneli</title>
+<style>
+    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
+    #panel { display: none; margin-top: 20px; }
+    li { list-style: none; background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; }
+    button { background: red; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; }
+</style>
 </head>
 <body>
 
-<h2>Müdir Girişi</h2>
-
-Kod: <input type="password" id="adminCode">
+<h2>Admin Paneli</h2>
+<input id="adminCode" placeholder="Kod">
 <button onclick="adminLogin()">Daxil ol</button>
 
-<hr>
-
-<div id="panel" style="display:none;">
-
-    <h3>Cərimə Yaz</h3>
-    Məbləğ (AZN):<br>
-    <input type="number" id="cerime"><br><br>
-
-    <button onclick="addCerime()">Cərimə Əlavə Et</button>
-
-    <ul id="cerimeList"></ul>
-
-    <hr>
-
-    <h3>Bütün Sifarişlər</h3>
-    <ul id="orderListAdmin"></ul>
+<div id="panel">
+    <h3>Sifarişlər</h3>
+    <ul id="adminList"></ul>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
